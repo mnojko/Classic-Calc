@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=VT323&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: "Orbitron";
+            font-weight: normal;
+            font-style: normal;
+            src: url('Fonts/Orbitron/Orbitron-Regular.ttf');
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: 0;
+        }
+        html {
+            font-size: 18px;
+            font-family: "Orbitron";
+        }
+        body {
+            height: 100vh;
+            width: 100vw;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            background: radial-gradient(ellipse at top left, rgb(230, 230, 230), rgb(172, 171, 171));
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow: hidden;
+        }
+        .calc-container {
+            grid-column: 2;
+            grid-row-start: 2;
+            grid-row-end: span 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .calculator {
+            height: 513.75px;
+            width: 315px;
+            border: 2px solid rgb(28, 28, 28);
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(13, 1fr);
+            gap: 3px;
+            padding: 5px;
+            background-color: #4b4e6f;
+            box-shadow: 10px 10px 35px rgba(0, 0, 0, 0.25);
+        }
+        .digit,
+        .operator,
+        .other {
+            color: black;
+            box-shadow:
+            1px 1px 5px rgba(0, 0, 0, 0.2),
+            inset -3px -3px 10px rgba(0, 0, 0, 0.2),
+            inset 3px 3px 10px rgba(255, 255, 255, 0.2);
+            border: 1.5px solid #222222;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            transition: transform .1s ease;
+        }
+        .digit,
+        .operator,
+        .other,
+        .display {
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+        }
+        .digit {
+            background: radial-gradient(ellipse at top left, #f0f0f0, #F0F4EF, #bcbfbc);
+        }
+        .operator {
+            background: radial-gradient(ellipse at top left, #fec474, #FFB347, #d6953a);
+        }
+        .other {
+            background: radial-gradient(ellipse at top left, #6b8491, #5D737E, #45555d);
+        }
+        .active {
+            transform: scale(.98);
+        }
+        .display {
+            background: linear-gradient(#1e1e24, #330d2e);
+            font-size: 2rem;
+            color: #00F5D4;
+            box-shadow:
+            inset 1px 1px 1px rgb(0, 0, 0, 0.5),
+            inset -1px -1px 1px rgba(0, 0, 0, 0.5),
+            inset -1px 1px 1px rgb(0, 0, 0, 0.5),
+            inset 1px -1px 1px rgba(0, 0, 0, 0.5),
+            inset 20px 20px 100px rgb(0, 0, 0, 0.2),
+            inset 5px 5px 100px rgba(255, 255, 255, 0.2),
+            inset -2px -2px 10px rgba(255, 255, 255, 0.1);
+            margin-bottom: 2px;
+        }
+        #one {
+            grid-column: 1;
+            grid-row-start: 6;
+            grid-row-end: span 2;
+        }
+        #two {
+            grid-column: 2;
+            grid-row-start: 6;
+            grid-row-end: span 2;
+        }
+        #three {
+            grid-column: 3;
+            grid-row-start: 6;
+            grid-row-end: span 2;
+        }
+        #four {
+            grid-column: 1;
+            grid-row-start: 8;
+            grid-row-end: span 2;
+        }
+        #five {
+            grid-column: 2;
+            grid-row-start: 8;
+            grid-row-end: span 2;
+        }
+        #six {
+            grid-column: 3;
+            grid-row-start: 8;
+            grid-row-end: span 2;
+        }
+        #seven {
+            grid-column: 1;
+            grid-row-start: 10;
+            grid-row-end: span 2;
+        }
+        #eight {
+            grid-column: 2;
+            grid-row-start: 10;
+            grid-row-end: span 2;
+        }
+        #nine {
+            grid-column: 3;
+            grid-row-start: 10;
+            grid-row-end: span 2;
+        }
+        #zero {
+            grid-column-start: 1;
+            grid-column-end: span 2;
+            grid-row-start: 12;
+            grid-row-end: span 2;
+            border-bottom-left-radius: 16px;
+        }
+        #decimal {
+            grid-column: 3;
+            grid-row-start: 12;
+            grid-row-end: span 2;
+        }
+        #divide {
+            grid-column: 4;
+            grid-row-start: 4;
+            grid-row-end: span 2;
+        }
+        #multiply {
+            grid-column: 4;
+            grid-row-start: 6;
+            grid-row-end: span 2;
+        }
+        #subtract {
+            grid-column: 4;
+            grid-row-start: 8;
+            grid-row-end: span 2;
+        }
+        #add {
+            grid-column: 4;
+            grid-row-start: 10;
+            grid-row-end: span 2;
+        }
+        #equals {
+            grid-column: 4;
+            grid-row-start: 12;
+            grid-row-end: span 2;
+            border-bottom-right-radius: 16px;
+        }
+        #clear {
+            grid-column: 1;
+            grid-row-start: 4;
+            grid-row-end: span 2;
+        }
+        #flip {
+            grid-column: 2;
+            grid-row-start: 4;
+            grid-row-end: span 2;
+        }
+        #percentage {
+            grid-column: 3;
+            grid-row-start: 4;
+            grid-row-end: span 2;
+        }
+        .display {
+            grid-column-start: 1;
+            grid-column-end: span 4;
+            grid-row-start: 1;
+            grid-row-end: span 3;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calc-container">
+        <div class="calculator">
+            <div class="button digit" id="one" data-value="1">1</div>
+            <div class="button digit" id="two" data-value="2">2</div>
+            <div class="button digit" id="three" data-value="3">3</div>
+            <div class="button digit" id="four" data-value="4">4</div>
+            <div class="button digit" id="five" data-value="5">5</div>
+            <div class="button digit" id="six" data-value="6">6</div>
+            <div class="button digit" id="seven" data-value="7">7</div>
+            <div class="button digit" id="eight" data-value="8">8</div>
+            <div class="button digit" id="nine" data-value="9">9</div>
+            <div class="button digit" id="zero" data-value="0">0</div>
+            <div class="button digit" id="decimal" data-value=".">.</div>
+            <div class="button operator" id="divide" data-value="/">÷</div>
+            <div class="button operator" id="multiply" data-value="*">·</div>
+            <div class="button operator" id="subtract" data-value="-">-</div>
+            <div class="button operator" id="add" data-value="+">+</div>
+            <div class="button operator" id="equals" data-value="=">=</div>
+            <div class="button other" id="clear" data-value="c">C</div>
+            <div class="button other" id="flip" data-value="±">±</div>
+            <div class="button other" id="percentage" data-value="%">%</div>
+            <div class="button display">0</div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", (event) => {
+            const calculator = document.querySelector('.calculator');
+            calculator.focus();
+        });
+        
+        const display = document.querySelector('.display');
+        const buttons = document.querySelectorAll('.button');
+            buttons.forEach((button) => {
+                button.addEventListener('mousedown', filterEvent);
+                button.addEventListener('mouseup', filterEvent);
+            });
+
+        window.addEventListener('keydown', filterEvent);
+        window.addEventListener('keyup', filterEvent);
+
+        let firstVariable = null;
+        let operator = null;
+        let inputString = '0';
+
+        function timeoutDisplay(input) {
+            display.textContent = '';
+            setTimeout(() => {
+                formatDisplay(input);
+            }, 35);
+        }
+        function formatDisplay(input) {
+            const maxLength = 9;
+            let toDisplay = input;
+            if (toDisplay.length > maxLength) {
+                toDisplay = parseFloat(toDisplay).toExponential(3);
+            }
+            display.textContent = toDisplay.toString();
+        }
+
+        function filterEvent(event) {
+            if (event.type === 'mousedown') {
+                mousedown(event);
+            }
+            if (event.type === 'mouseup') {
+                mouseup(event);
+            }
+            if (event.type === 'keydown') {
+                keydown(event);
+            }
+            if (event.type === 'keyup') {
+                keyup(event);
+            }
+        }
+        function mousedown(event) {
+            event.target.classList.add('active');
+            const artificialEvent = {
+                key: `${event.target.dataset.value}`,
+                type: 'keydown'
+            };
+            typing(artificialEvent);
+        }
+        function mouseup(event) {
+            event.target.classList.remove('active');
+        }
+        function keydown(event) {
+            const button = document.querySelector(`.button[data-value="${event.key}"]`)
+            if (button) {
+                button.classList.add('active');
+                const artificialEvent = {
+                    key: `${event.key}`,
+                    type: 'keydown'
+                };
+                typing(artificialEvent);
+            }
+            if (event.key === 'Backspace') {
+                if (inputString.length > 1) {
+                    inputString = inputString.slice(0, -1);
+                } else {
+                    inputString = '0';
+                }
+                timeoutDisplay(inputString);
+                return;
+            }
+            if (event.key === 'Enter') {
+                console.log(event.key);
+                typing({key: '=', type: 'keydown'});
+            }
+        }
+        function keyup(event) {
+            const button = document.querySelector(`.button[data-value="${event.key}"]`)
+            if (button) {
+                button.classList.remove('active');
+            }
+        }
+        function typing(event) {
+            if (display.textContent === '∞') {
+                clear();
+                return;
+            }
+            switch (event.key) {
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                case "5":
+                case "6":
+                case "7":
+                case "8":
+                case "9":
+                    if (inputString === '0') {
+                        inputString = inputString.slice(1);
+                    }
+                    inputString += `${event.key}`;
+                    timeoutDisplay(inputString);
+                    break;
+                case "0":
+                    if (inputString === '0' && firstVariable === null) {
+                        break;
+                    } else if (inputString === '0' && firstVariable !== null) {
+                        inputString = `${event.key}`;
+                        timeoutDisplay(inputString);
+                        break;
+                    } else if (inputString !== '0' && firstVariable !== null) {
+                        inputString += `${event.key}`;
+                        timeoutDisplay(inputString);
+                        break;
+                    }
+                case ".":
+                    if (inputString.includes('.')) {
+                        break;
+                    }
+                    inputString += `${event.key}`;
+                    timeoutDisplay(inputString);
+                    break;
+                case "/":
+                case "*":
+                case "-":
+                case "+":
+                case "=":
+                    if (inputString === '0') {
+                        timeoutDisplay(inputString);
+                        break;
+                    }
+                    calculate(event);
+                    break;
+                case "±":
+                    inputString = (parseFloat(inputString) * -1).toString();
+                    timeoutDisplay(inputString);
+                    break;
+                case "%":
+                    inputString = (parseFloat(inputString) * 0.01).toString();
+                    timeoutDisplay(inputString);
+                    break;
+                case "c":
+                    clear();
+                    break;
+            }
+        }
+        function calculate(event) {
+            if (event.key === '=') {
+                if (operator === '/' && parseFloat(inputString) === 0) {
+                    timeoutDisplay('∞');
+                    firstVariable = null;
+                    operator = null;
+                    inputString = '0';
+                    return;
+                }
+                if (firstVariable !== null && operator !== null && inputString !== '0') {
+                    if (operator === '-') {
+                        inputString = parseFloat(firstVariable) - parseFloat(inputString);
+                    }
+                    if (operator === '+') {
+                        inputString = parseFloat(firstVariable) + parseFloat(inputString);
+                    }
+                    if (operator === '*') {
+                        inputString = parseFloat(firstVariable) * parseFloat(inputString);
+                    }
+                    if (operator === '/') {
+                        inputString = parseFloat(firstVariable) / parseFloat(inputString);
+                    }
+                    firstVariable = inputString.toString();
+                    operator = null;
+                    timeoutDisplay(inputString.toString());
+                } else if ((firstVariable !== null && operator !== null && inputString === '0') || (firstVariable === null && operator === null && inputString !== '0')) {
+                    timeoutDisplay(inputString.toString());
+                    return;
+                }
+            } else if (event.key === '-' || event.key === '+' || event.key === '*' || event.key === '/') {
+                if (firstVariable === null) {
+                    firstVariable = parseFloat(inputString);
+                    operator = event.key;
+                    inputString = '0';
+                    timeoutDisplay(firstVariable.toString());
+                } else if (operator === '/' && parseFloat(inputString) === 0) {
+                    timeoutDisplay('∞');
+                    firstVariable = null;
+                    operator = null;
+                    inputString = '0';
+                    return;
+                } else if (firstVariable !== null && inputString !== '0') {
+                    if (operator === '-') {
+                        firstVariable = parseFloat(firstVariable) - parseFloat(inputString);
+                    }
+                    if (operator === '+') {
+                        firstVariable = parseFloat(firstVariable) + parseFloat(inputString);
+                    }
+                    if (operator === '*') {
+                        firstVariable = parseFloat(firstVariable) * parseFloat(inputString);
+                    }
+                    if (operator === '/') {
+                        firstVariable = parseFloat(firstVariable) / parseFloat(inputString);
+                    }
+                    operator = event.key;
+                    inputString = '0';
+                    timeoutDisplay(firstVariable.toString());
+                } else if (firstVariable !== null && inputString === '0') {
+                    operator = event.key;
+                    timeoutDisplay(firstVariable.toString());
+                }
+            } 
+        }
+        function clear() {
+            firstVariable = null;
+            operator = null;
+            inputString = '0';
+            timeoutDisplay(inputString);
+        }
+    </script>
+</body>
+</html>
